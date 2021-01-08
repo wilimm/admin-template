@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+</head>
+<body>
+<script type="text/javascript">
+    (function () {
+        var obj1 = {
+            a: 1,
+            b: 2
+        }
+
+        var obj2 = {...obj1};
+
+        console.log(obj1 === obj2); // false
+
+        obj2.c = 3; // 修改obj2不会影响obj1
+        console.log(obj1); // {a: 1, b: 2}
+        console.log(obj2); // {a: 1, b: 2, c: 3}
+    })();
+</script>
+</body>
+</html>
+
+<!--
+    展开语法：https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Spread_syntax
+    总结 ES6 扩展运算符（...）: https://segmentfault.com/a/1190000020259974
+-->
