@@ -1,32 +1,103 @@
 <!DOCTYPE html>
-<html class="x-admin-sm">
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <title>欢迎页面-X-admin2.2</title>
-    <meta name="renderer" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport"
-          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
-    <link rel="stylesheet" href="../x-admin/css/font.css">
-    <link rel="stylesheet" href="../x-admin/css/xadmin.css">
-    <script src="../x-admin/lib/layui/layui.js" charset="utf-8"></script>
-    <script type="text/javascript" src="../x-admin/js/xadmin.js"></script>
-    <!--[if lt IE 9]>
-    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
-    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <meta charset="UTF-8" />
+    <title>amis demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <link rel="stylesheet" href="../amis/sdk.css" />
+    <!-- 从 1.1.0 开始 sdk.css 将不支持 IE 11，如果要支持 IE11 请引用这个 css -->
+    <!-- <link rel="stylesheet" href="sdk-ie11.css" /> -->
+    <!-- 不过 amis 开发团队几乎没测试过 IE 11 下的效果，所以可能有不少功能用不了 -->
+    <style>
+        html,
+        body,
+        .app-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
 </head>
 <body>
-<div class="x-nav">
-          <span class="layui-breadcrumb">
-            <a href="">首页</a>
-            <a href="">演示</a>
-            <a>
-              <cite>导航元素</cite></a>
-          </span>
-</div>
-<div class="layui-fluid">
-    这里是 admin-list.html
-</div>
+<div id="root" class="app-wrapper"></div>
+<script src="../amis/sdk.js"></script>
+<script type="text/javascript">
+    (function () {
+        let amis = amisRequire('amis/embed');
+
+        // 通过替换下面这个配置来生成不同页面
+        amis.embed('#root', {
+            "definitions": {
+                "options": {
+                    "type": "combo",
+                    "multiple": true,
+                    "multiLine": true,
+                    "name": "options",
+                    "controls": [
+                        {
+                            "type": "group",
+                            "controls": [
+                                {
+                                    "label": "名称",
+                                    "name": "label",
+                                    "type": "text",
+                                    "required": true
+                                },
+                                {
+                                    "label": "值",
+                                    "name": "value",
+                                    "type": "text",
+                                    "required": true
+                                }
+                            ]
+                        },
+                        {
+                            "label": "包含子选项",
+                            "type": "switch",
+                            "name": "hasChildren",
+                            "mode": "inline",
+                            "className": "block"
+                        },
+                        {
+                            "$ref": "options",
+                            "label": "子选项",
+                            "name": "children",
+                            "visibleOn": "this.hasOwnProperty('hasChildren') && this.hasChildren",
+                            "addButtonText": "新增子选项"
+                        }
+                    ]
+                }
+            },
+            "type": "page",
+            "title": "引用",
+            "body": [
+                {
+                    "type": "form",
+                    "api": "api/xxx",
+                    "actions": [],
+                    "controls": [
+                        {
+                            "$ref": "options",
+                            "label": "选项"
+                        },
+                        {
+                            "type": "static",
+                            "label": "当前值",
+                            "tpl": "<pre>${options|json}</pre>"
+                        }
+                    ]
+                }
+            ]
+        });
+
+    })();
+</script>
 </body>
 </html>
