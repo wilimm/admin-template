@@ -31,70 +31,64 @@
 <script type="text/javascript">
     (function () {
         let amis = amisRequire('amis/embed');
+        let amisLib = amisRequire('amis');
 
         // 通过替换下面这个配置来生成不同页面
         amis.embed('#root', {
-            "definitions": {
-                "options": {
-                    "type": "combo",
-                    "multiple": true,
-                    "multiLine": true,
-                    "name": "options",
-                    "controls": [
-                        {
-                            "type": "group",
-                            "controls": [
-                                {
-                                    "label": "名称",
-                                    "name": "label",
-                                    "type": "text",
-                                    "required": true
-                                },
-                                {
-                                    "label": "值",
-                                    "name": "value",
-                                    "type": "text",
-                                    "required": true
-                                }
-                            ]
-                        },
-                        {
-                            "label": "包含子选项",
-                            "type": "switch",
-                            "name": "hasChildren",
-                            "mode": "inline",
-                            "className": "block"
-                        },
-                        {
-                            "$ref": "options",
-                            "label": "子选项",
-                            "name": "children",
-                            "visibleOn": "this.hasOwnProperty('hasChildren') && this.hasChildren",
-                            "addButtonText": "新增子选项"
-                        }
-                    ]
-                }
-            },
             "type": "page",
             "title": "引用",
             "body": [
                 {
-                    "type": "form",
-                    "api": "api/xxx",
-                    "actions": [],
-                    "controls": [
-                        {
-                            "$ref": "options",
-                            "label": "选项"
+                    type: "crud",
+                    initFetch: false,
+                    api: {
+                        url: "http://127.0.0.1:8801/admin/test/obfuscated",
+                        data: {
+                            "id": "${id}",
+                            _operator: "meikai"
                         },
+                        adaptor: "      return {\n" +
+                            "        ...payload,\n" +
+                            "        status: payload.error.code === 0 ? 0 : payload.error.code,\n" +
+                            "        msg:\"\",\n" +
+                            "        data: [payload.data]" +
+                            "      }",
+                    },
+                    filter: {
+                        title: "请输入数字Id",
+                        submitText: "",
+                        controls: [
+                            {
+                                type: "text",
+                                name: "id",
+                                placeholder: "long",
+                                addOn: {
+                                    label: "查询",
+                                    type: "submit",
+                                },
+                            }
+                        ]
+                    },
+                    columns: [
                         {
-                            "type": "static",
-                            "label": "当前值",
-                            "tpl": "<pre>${options|json}</pre>"
-                        }
+                            name: "obfuscatedId",
+                            label: "obfuscatedId",
+                        },
                     ]
+                },
+                {
+                    type: "button",
+                    actionType: "ajax",
+                    api: "get:/test",
+                    label: "ajax 请求"
                 }
             ]
+        }, {}, {
+            notify: function (type, msg) {
+                if (msg == "Request failed with status code 403") {
+                    amisLib.toast.error("没有权限，请联系开发")
+                }
+            }
         });
 
     })();
